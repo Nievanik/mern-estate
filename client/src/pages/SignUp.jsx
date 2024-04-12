@@ -30,7 +30,6 @@ export default function SignUp() {
         setLoading(false);
         return;
       }
-      console.log("ab", data);
       setLoading(false);
       setError(null);
       navigate("/sign-in");
