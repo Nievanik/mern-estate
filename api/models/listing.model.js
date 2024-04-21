@@ -51,8 +51,8 @@ const listingSchema = ({
     },
     userRef:{
         type:String,
-        require:true
-    },
+        require:true,
+    }
 })
 
 const Listing = mongoose.model("Listing", listingSchema);
