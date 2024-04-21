@@ -63,6 +63,7 @@ export const UpdateListing = () => {
         })
         .catch((err) => {
           setImageUploadError("Image upload failed (max size 2Mb per image)");
+          setUploading(false);
         });
     } else {
       setUploading(false);
