@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ListingItem from "../components/ListingItem";
 
 export default function () {
   const [sidebarDate, setSidebarData] = useState({
@@ -12,7 +13,7 @@ export default function () {
     order: "desc",
   });
   const [loading, setLoading] = useState(false);
-  const [listing, setListing] = useState({});
+  const [listing, setListing] = useState([]);
   const navigate = useNavigate();
 
   console.log(listing);
@@ -40,7 +41,7 @@ export default function () {
         type: typeFromUrl || "all",
         parking: parkingFromUrl === "true" ? true : false,
         furnished: furnishedFromUrl === "true" ? true : false,
-        offer: orderFromUrl === "true" ? true : false,
+        offer: offerFromUrl === "true" ? true : false,
         sort: sortFromUrl || "created_at",
         order: orderFromUrl || "desc",
       });
@@ -201,15 +202,20 @@ export default function () {
         <h1 className="text-3xl font-semibold border-b mt-5 p-3">
           Listing Result
         </h1>
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap p-7 gap-7">
           {loading && (
-            <p className="text-slate-700 text-xl p-7 text-center w-full">
+            <p className="text-slate-700 text-xl text-center w-full">
               Loading...
             </p>
           )}
           {!loading && listing.length == 0 && (
-            <p className="text-slate-700 text-xl p-7">No Listing Found!</p>
+            <p className="text-slate-700 text-xl">No Listing Found!</p>
           )}
+          {!loading &&
+            listing &&
+            listing.map((listing) => (
+              <ListingItem key={listing._id} listing={listing} />
+            ))}
         </div>
       </div>
     </div>
