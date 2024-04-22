@@ -79,7 +79,7 @@ export const getListings = async (req,res,next)=>{
             furnished,
             parking,
             type,
-        }).limit(limit)
+        }).limit(limit).skip(startIndex);
 
         return res.status(200).json(listings)
         

@@ -5,7 +5,7 @@ import ListingItem from "../components/ListingItem";
 export default function () {
   const [sidebarDate, setSidebarData] = useState({
     searchTerm: "",
-    type: "rent",
+    type: "all",
     parking: false,
     furnished: false,
     offer: false,
@@ -14,6 +14,7 @@ export default function () {
   });
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState([]);
+  const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
   console.log(listing);
@@ -49,10 +50,12 @@ export default function () {
 
     const fetchListing = async () => {
       setLoading(true);
+      setShowMore(false);
       try {
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
+        if (data.length > 8) setShowMore(true);
         setListing(data);
         setLoading(false);
       } catch (error) {
@@ -106,6 +109,19 @@ export default function () {
     urlParams.set("order", sidebarDate.order);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
+  };
+
+  const onShowMore = async () => {
+    const numberOfListing = listing.length;
+    const startIndex = numberOfListing;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) setShowMore(false);
+
+    setListing([...listing, ...data]);
   };
   return (
     <div className="flex flex-col md:flex-row">
@@ -216,6 +232,15 @@ export default function () {
             listing.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+
+          {showMore && (
+            <button
+              onClick={onShowMore}
+              className="text-green-700 hover:underline mt-5 w-full text-center"
+            >
+              Show more
+            </button>
+          )}
         </div>
       </div>
     </div>
